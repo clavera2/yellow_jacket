@@ -8,12 +8,12 @@ import (
 )
 
 type Message struct {
-	id   uuid.UUID
-	data interface{}
+	Id   uuid.UUID   `json:"id"`
+	Data interface{} `json:"data"`
 }
 
 func (m Message) GetID() uuid.UUID {
-	return m.id
+	return m.Id
 }
 
 func NewMessage(message interface{}) (*Message, error) {
@@ -22,17 +22,17 @@ func NewMessage(message interface{}) (*Message, error) {
 		return nil, errors.New("could not generate unique id for message")
 	}
 	return &Message{
-		id:   uid,
-		data: message,
+		Id:   uid,
+		Data: message,
 	}, nil
 }
 
 func (m Message) GetData() interface{} {
-	return m.data
+	return m.Data
 }
 
 func (m *Message) Encode() ([]byte, error) {
-	marshal, err := json.Marshal(m.data)
+	marshal, err := json.Marshal(m.Data)
 	if err != nil {
 		return nil, errors.New("cannot convert message data to json")
 	}
