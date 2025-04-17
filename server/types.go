@@ -14,7 +14,9 @@ type MessagePool struct {
 }
 
 func NewMessagePool() *MessagePool {
-	return &MessagePool{Mutex: sync.Mutex{}, messages: make(map[uuid.UUID]utils.Message)}
+	return &MessagePool{
+		messages: make(map[uuid.UUID]utils.Message),
+	}
 }
 
 func (m *MessagePool) AddMessage(message utils.Message) error {
