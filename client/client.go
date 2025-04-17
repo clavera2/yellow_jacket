@@ -21,7 +21,7 @@ type Client struct {
 
 var client Client
 
-func initializeServerURL(url string) {
+func InitializeServerURL(url string) {
 
 	client.serverURL = url
 }

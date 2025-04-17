@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	//OPENING BANNER FOR YELLOW_JACKET CLIENT
 	fmt.Println(":-:-:-:-:-:-:-:-:-:-- WeLcOmE tO yElLoW jAcKeT --:-:-:-:-:-:-:-:-:-:-:")
 
 	reader := bufio.NewReader(os.Stdin)

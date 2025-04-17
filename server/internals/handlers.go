@@ -20,7 +20,7 @@ func getAllMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	messages := mp.GetAllMessages()
+	messages := mP.GetAllMessages()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(messages)
 }
@@ -38,7 +38,7 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	message, err := mp.GetMessage(id)
+	message, err := mP.GetMessage(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
@@ -60,7 +60,7 @@ func addMessageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := mp.AddMessage(msg); err != nil {
+	if err := mP.AddMessage(msg); err != nil {
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
@@ -82,7 +82,7 @@ func deleteMessageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := mp.DeleteMessage(id); err != nil {
+	if err := mP.DeleteMessage(id); err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}

@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/clavera2/yellow_jacket/utils"
@@ -10,26 +9,29 @@ import (
 )
 
 var (
-	server = http.NewServeMux()
+	router = http.NewServeMux()
 	mP     = NewMessagePool()
 )
 
-func main() {
+func Initialize() {
 	initializeServer()
-	log.Println("Starting message caching server on :8080")
-	if err := http.ListenAndServe(":8080", server); err != nil {
-		log.Fatalf("Server failed: %v", err)
-	}
 }
 
+func Router() *http.ServeMux {
+	return router
+}
+
+// initializeServer initializes all routes on the router
 func initializeServer() {
-	server.HandleFunc("/", homeHandler)
-	server.HandleFunc("/add", addMessageHandler)
-	server.HandleFunc("/get", getMessageHandler)
-	server.HandleFunc("/all", getAllMessagesHandler)
-	server.HandleFunc("/delete", deleteMessageHandler)
+	//Register handlers
+	router.HandleFunc("/", homeHandler)
+	router.HandleFunc("/add", handleAddMessage)
+	router.HandleFunc("/get", handleGetMessage)
+	router.HandleFunc("/all", handleGetAllMessages)
+	router.HandleFunc("/delete", handleDeleteMessage)
 }
 
+// handleAddMessage handles adding a new message
 func handleAddMessage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -51,6 +53,7 @@ func handleAddMessage(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Message added"))
 }
 
+// handleGetMessage retrieves a message by ID
 func handleGetMessage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -73,6 +76,7 @@ func handleGetMessage(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(msg)
 }
 
+// handleGetAllMessages handles listing all messages
 func handleGetAllMessages(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -83,6 +87,7 @@ func handleGetAllMessages(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(msgs)
 }
 
+// handleDeleteMessage handles deleting a message by ID
 func handleDeleteMessage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -102,14 +107,4 @@ func handleDeleteMessage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("Message deleted"))
-}
-
-func handleClearPool(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	mP.ClearPool()
-	w.Write([]byte("Message pool cleared"))
 }
